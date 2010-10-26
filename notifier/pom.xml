@@ -9,7 +9,6 @@
   </parent>
 
   <name>Hudson Lava Lamp Notifier plugin</name>
-  <url>http://www.ingenotech.com/products</url>
 
   <groupId>com.ingenotech.hudson</groupId>
   <artifactId>LavaLampNotifier</artifactId>

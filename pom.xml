@@ -8,8 +8,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-
   <name>Lava Lamp Master Project</name>
+  <url>http://wiki.hudson-ci.org/display/HUDSON/Lava+Lamp+Notifier</url>
+
   <groupId>org.jvnet.hudson.plugins</groupId>
   <artifactId>lavalamp</artifactId>
   <version>1.0</version>
@@ -26,6 +27,12 @@
     <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/lavalamp</url>
   </scm>
 
+  <developers>
+    <developer>
+      <id>edrandall</id>
+      <name>Ed Randall</name>
+    </developer>
+  </developers>
 
 </project>
 
