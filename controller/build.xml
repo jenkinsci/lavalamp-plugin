@@ -1,0 +1,128 @@
+<project name="Lava Lamp Controller" default="init" basedir=".">
+
+    <!-- create property holding environment variables -->
+    <property environment="env" />
+
+    <property name="company"                value="Ed Randall" />
+    <property name="project.name"           value="${ant.project.name}" />
+    <property name="version"                value="1.3" />
+
+    <property name="src"                    value="src/main/java" />
+    <property name="test"                   value="src/test/java" />
+    <property name="target.classes"         value="target/classes" />
+    <property name="target.dist"            value="target/dist" />
+
+    <property name="application-prefix"     value="LavaLampController" />
+    <property name="application-jar"        value="${application-prefix}.jar" />
+    <property name="application-version"    value="${application-prefix}-${version}" />
+    <property name="application-zip"        value="${application-version}.zip" />
+
+    <property name="debug"                  value="off"/>
+
+    <property name="main-class"             value="com.ingenotech.lavalamp.LavaLampServer" />
+
+    <property name="ftd2xxj"                location="ftd2xxj"/>
+    <property name="ftd2xxj.win32"          location="${ftd2xxj}/win32"/>
+
+
+    <path id="compile.classpath">
+        <fileset dir="${ftd2xxj}">
+            <include name="ftd2xxj-2.1.jar" />
+            <include name="javax.util.property-2_0.jar"/>
+        </fileset>
+    </path>
+
+    <path id="run.classpath">
+        <pathelement location="${target.classes}"/>
+        <path refid="compile.classpath"/>
+    </path>
+
+
+    <target name="init" >
+        <tstamp>
+            <format property="date" pattern="dd-MMMM-yyyy" locale="en" />
+            <format property="time" pattern="HH:mm:ss" locale="en" />
+            <format property="year" pattern="yyyy" locale="en" />
+        </tstamp>
+
+        <mkdir dir="${target.classes}" />
+        <mkdir dir="${target.dist}" />
+
+        <!-- print configuration info -->
+        <echo level="info">Start time: ${date} : ${time}</echo>
+        <echo level="info">JDK: ${java.home}</echo>
+        <pathconvert refid="run.classpath" property="cp" pathsep="${line.separator}    "/>
+        <echo level="info">classpath: ${line.separator}    ${cp}</echo>
+    </target>
+
+
+    <target name="build" description="Compile and package">
+        <antcall target="compile" inheritrefs="true" />
+        <antcall target="dist"    inheritrefs="true" />
+    </target>
+
+
+    <target name="clean" description="Clean all generated files">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${target.classes}"/>
+            <fileset dir="${target.dist}"/>
+        </delete>
+    </target>
+
+
+    <target name="compile" depends="init" description="Compile">
+        <javac srcdir="${src}"
+               destdir="${target.classes}"
+               debug="${debug}"
+               includeantruntime="false">
+            <classpath refid="compile.classpath" />
+        </javac>
+    </target>
+
+
+    <target name="jar" depends="compile">
+        <jar jarfile="${target.dist}/${application-jar}" index="true">
+            <manifest>
+                <attribute name="Specification-Title" value="${project.name}" />
+                <attribute name="Specification-Version" value="${version}" />
+                <attribute name="Specification-Vendor" value="${company}" />
+                <attribute name="Implementation-Title" value="${project.name}" />
+                <attribute name="Implementation-Version" value="${version} ${date}" />
+                <attribute name="Implementation-Vendor" value="${company}" />
+                <attribute name="Main-Class" value="${main-class}" />
+            </manifest>
+
+            <fileset dir="${target.classes}" />
+        </jar>
+    </target>
+
+
+    <target name="dist" depends="jar" description="Create binary distribution package">
+        <zip destfile="${target.dist}/${application-zip}">
+            <zipfileset dir="src/scripts" prefix="${application-version}"/>
+            <zipfileset dir="${target.dist}" prefix="${application-version}/lib">
+                <include name="${application-jar}" />
+            </zipfileset>
+            <zipfileset dir="${ftd2xxj}" prefix="${application-version}/lib">
+                <include name="ftd2xxj-2.1.jar"/>
+                <include name="javax.util.property-2_0.jar"/>
+            </zipfileset>
+            <zipfileset dir="${ftd2xxj}/native" prefix="${application-version}/native">
+                <include name="*/*"/>
+            </zipfileset>
+        </zip>
+    </target>
+
+
+    <target name="run" depends="compile" description="Run">
+      <java classname="${main-class}"
+            classpathref="run.classpath"
+            fork="true">
+        <sysproperty key="java.library.path" path="${ftd2xxj}/native/win32:${ftd2xxj}/native/linux-i386"/>
+        <arg value="1999"/>
+        <arg value="1999"/>
+        <arg value="224.0.0.3"/>
+      </java>
+    </target>
+
+</project>
