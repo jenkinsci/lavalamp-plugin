@@ -104,11 +104,7 @@
                 <include name="${application-jar}" />
             </zipfileset>
             <zipfileset dir="${ftd2xxj}" prefix="${application-version}/lib">
-                <include name="ftd2xxj-2.1.jar"/>
-                <include name="javax.util.property-2_0.jar"/>
-            </zipfileset>
-            <zipfileset dir="${ftd2xxj}/native" prefix="${application-version}/native">
-                <include name="*/*"/>
+                <include name="**/*"/>
             </zipfileset>
         </zip>
     </target>
