@@ -4,12 +4,12 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>lavalamp-pom</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>LavaLampController</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
 
   <name>Lava Lamp controller application</name>
 
