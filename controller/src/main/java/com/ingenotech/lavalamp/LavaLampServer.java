@@ -3,15 +3,29 @@ package com.ingenotech.lavalamp;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketAddress;
+import java.net.UnknownHostException;
 
 import com.ftdichip.ftd2xx.FTD2xxException;
+import com.ingenotech.annotations.Version;
 import com.ingenotech.lavalamp.ftdi.DeviceController;
+import com.ingenotech.tools.VersionReader;
 
-
+@Version(version="1.3")
 public class LavaLampServer {
 
-    public static final String VERSION = "LavaLamp server V1.2";
+    public static final String VERSION;
+    
+    static {
+    	String v = new VersionReader(LavaLampServer.class).getVersion();
+    	String hostname = null;
+		try {
+			hostname = InetAddress.getLocalHost().getHostName();
+			if (hostname.startsWith("localhost"))
+				hostname = null;
+		} catch (UnknownHostException ex) {
+		}
+    	VERSION = "LavaLamp server"+(v == null ? "" : " V"+v)+(hostname == null ? "" : " @"+hostname);
+    }
 
     private DeviceController device;
     private TCPListener      tcpListener;
@@ -138,7 +152,7 @@ public class LavaLampServer {
         
         LavaLampServer bpa = null;
         try {
-            Log.log("LavaLampServer starting...");
+            Log.log(VERSION+" starting...");
             bpa = new LavaLampServer(tcpAddress, udpAddress, mcAddress);
             bpa.run();
 

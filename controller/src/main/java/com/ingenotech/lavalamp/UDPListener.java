@@ -40,10 +40,16 @@ public class UDPListener extends Thread {
 		Log.log("UDPListener started on: "+server.getLocalSocketAddress() +(multicastGroup != null ? " (multicast group:"+multicastGroup+")" : ""));
 		try {
 			while (run) {
-				byte[] buffer = new byte[500];
-				DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
-				server.receive(packet);
-				this.handler.handleConnection(packet);
+				byte[] reqBuf = new byte[500];
+				DatagramPacket reqPacket = new DatagramPacket(reqBuf, reqBuf.length);
+				server.receive(reqPacket);
+				String response = this.handler.handleConnection(reqPacket);
+				if (response.length() > 0) {
+					byte[] respBuf = response.getBytes();
+					DatagramPacket respPacket = new DatagramPacket(respBuf, respBuf.length, reqPacket.getSocketAddress());
+					//Log.log("Sending response:"+response+" to:"+reqPacket.getSocketAddress());
+					server.send(respPacket);
+				}
 			}
 		} catch (IOException iox) {
 			Log.log("UDPListener.run() socket exception:", iox);

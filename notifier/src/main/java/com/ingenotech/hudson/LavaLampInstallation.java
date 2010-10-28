@@ -38,16 +38,21 @@ public class LavaLampInstallation extends Notifier
 	private static final String	DEFAULT_ADDRESS = "localhost";
 	private static final int	DEFAULT_PORT 	= 1999;
 	
+	private static final String PROTOCOL_TCP = "TCP";
+	private static final String PROTOCOL_UDP = "UDP";
+	
 	private final String	name;
 	private final String	address;
     private final int		port;
+    private final String    protocol;
 
     
     @DataBoundConstructor
-    public LavaLampInstallation(String name, String address, int port) {
+    public LavaLampInstallation(String name, String address, int port, String protocol) {
     	this.name = name;
     	this.address = address;
     	this.port = port;
+    	this.protocol = protocol;
     }
     
     
@@ -60,6 +65,8 @@ public class LavaLampInstallation extends Notifier
     	StringBuilder sb = new StringBuilder(this.name);
    		sb.append(" (");
    		sb.append(getAddress());
+   		sb.append(":");
+   		sb.append(getProtocol());
    		sb.append(":");
    		sb.append(getPort());
    		sb.append(")");
@@ -98,9 +105,28 @@ public class LavaLampInstallation extends Notifier
     	return p;
     }
     
-	public TCPConnection newConnection() {
-    	LOG.fine("newConnection()");
-    	return new TCPConnection(getInetAddress(), getPort());
+    
+    public String getProtocol() {
+    	return parseProtocol(this.protocol);
+    }
+    
+    private static String parseProtocol(String value) {
+    	String pc = PROTOCOL_UDP;
+    	if (value != null && value.trim().equalsIgnoreCase(PROTOCOL_TCP))
+    		pc = PROTOCOL_TCP;
+    	return pc;
+    }
+    
+	public Connection newConnection() {
+		return newConnection(getInetAddress(), getPort(), getProtocol());
+    }
+
+	private static Connection newConnection(InetAddress addr, int port, String protocol) {
+    	LOG.fine("newConnection("+protocol+")");
+    	if (PROTOCOL_TCP.equalsIgnoreCase(protocol))
+    		return new TCPConnection(addr, port);
+    	else
+    		return new UDPConnection(addr, port);
     }
     
     
@@ -210,18 +236,31 @@ public class LavaLampInstallation extends Notifier
             return FormValidation.ok();
         }
         
+        public FormValidation doCheckProtocol(@QueryParameter String value) throws IOException, ServletException {
+        	try {
+        		parseProtocol(value);
+        	} catch (Exception ex) {
+                return FormValidation.error("LavaLamp server protocol must be [TCP,UDP]");
+        	}
+            return FormValidation.ok();
+        }
+        
+        
         public FormValidation doTestServerConnection(
         			@QueryParameter String address,
-        			@QueryParameter String port)
+        			@QueryParameter String port,
+        			@QueryParameter String protocol)
         {
-        	TCPConnection c = null;
+        	Connection c = null;
         	try {
         		InetAddress s = parseAddress(address);
         		int p = parsePort(port);
-        		c = new TCPConnection(s, p);
+        		String u = parseProtocol(protocol);
+        		c = newConnection(s, p, u);
         		c.open();
+        		boolean ok = c.ping(); 
         		String ident = c.getServerIdent();
-        		if (c.ping()) {
+        		if (ok) {
         			return FormValidation.ok("Connection to LavaLamp server:"+ident+" tested successfully.");
         		} else {
         			return FormValidation.error("Connected to LavaLamp server:"+ident+" but ping failed.");

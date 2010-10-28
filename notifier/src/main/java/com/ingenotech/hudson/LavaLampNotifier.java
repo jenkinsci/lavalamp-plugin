@@ -11,7 +11,6 @@ import hudson.model.Hudson;
 import hudson.model.Result;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Builder;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 import hudson.util.FormValidation;
@@ -30,7 +29,7 @@ import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
 
 /**
- * Sample {@link Builder}.
+ * Lava Lamp {@link Notifier}.
  *
  * <p>
  * When the user configures the project and enables this builder,
@@ -53,6 +52,8 @@ public class LavaLampNotifier extends Notifier
 
 	private static final Logger LOG = Logger.getLogger(LavaLampNotifier.class.getName());
 
+	/** The LavaLamp name when "default" is selected */
+	private static final String DEFAULTNAME = "(Default)";
 
 	/** The name of the LavaLamp in use */
 	private final String	name;
@@ -79,17 +80,22 @@ public class LavaLampNotifier extends Notifier
     	return this.changesOnly;
     }
 
-    
+
     /**
      * Gets the LavaLampInstallation to use.
      */
     public LavaLampInstallation getLavaLamp() {
     	DescriptorImpl descr = getDescriptor();
-        for ( LavaLampInstallation i : descr.getInstallations() ) {
+    	LavaLampInstallation[] all = descr.getInstallations();
+        for ( LavaLampInstallation i : all ) {
             if (name != null && name.equals(i.getName())) {
                 return i;
             }
         }
+        
+        if (DEFAULTNAME.equals(name) && all.length > 0)
+        	return all[0]; // use the default installation
+
         return null;
     }
     
@@ -124,7 +130,7 @@ public class LavaLampNotifier extends Notifier
     		return true;
     	}
     	
-    	TCPConnection c = null;
+    	Connection c = null;
     	try {
     		c = ll.newConnection();
     		c.open();

@@ -10,7 +10,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class TCPConnection {
+public class TCPConnection implements Connection {
 	private InetAddress 		server;
 	private int 				port;
 	private Socket				socket;
@@ -18,8 +18,7 @@ public class TCPConnection {
 	private PrintWriter			writer;
 	private String				serverIdent;
 	
-	private static final String	PING = "PING";
-	
+
 	public TCPConnection(String host, int port) throws UnknownHostException {
 		this(InetAddress.getByName(host), port);
 	}
@@ -28,6 +27,7 @@ public class TCPConnection {
 	public TCPConnection(InetAddress server, int port) {
 		this.server = server;
 		this.port = port;
+		this.serverIdent = "LavaLamp@"+server+":TCP:"+port;
 	}
 	
 	public synchronized void open() throws IOException {
@@ -51,15 +51,15 @@ public class TCPConnection {
 	}
 	
 	public boolean ping() throws IOException {
-		writer.println(PING+":");
+		writer.println(PING+" "+new java.util.Date().toString());
 		String resp = reader.readLine();
 		return (resp.toUpperCase().startsWith(PING));
 	}
 	
 	public void sendResult(String buildName, Result result) {
-		writer.println("NAME "+buildName);
-		writer.println("RESULT "+result.toString());
-		writer.println("QUIT");
+		writer.println(NAME+" "+buildName);
+		writer.println(RESULT+" "+result.toString());
+		writer.println(QUIT);
 	}
 	
 }

@@ -17,7 +17,8 @@ import java.net.Socket;
 import java.util.Arrays;
 
 /**
- * @author Ed
+ * Handle an incoming network connection.
+ * Parse the request message, send a response.
  */
 public class ConnectionHandler {
 	
@@ -36,12 +37,15 @@ public class ConnectionHandler {
 	}
 
 	
-	public void handleConnection(DatagramPacket packet) {
+	public String handleConnection(DatagramPacket packet) {
 		Log.log("UDP connection from: "+packet.getAddress()+":"+packet.getPort());
-		String data = new String(packet.getData());
+		String data = new String(packet.getData(), packet.getOffset(), packet.getLength());
 		Reader in = new StringReader( data );
-		PrintWriter out = new PrintWriter( new StringWriter() );
+		StringWriter sw = new StringWriter();
+		PrintWriter out = new PrintWriter( sw );
 		handleConnection( in, out );
+		out.flush();
+		return sw.toString();
 	}
 	
 	public void handleConnection(Socket socket) throws IOException {
@@ -52,7 +56,7 @@ public class ConnectionHandler {
 	}
 	
 	
-	/** TODO */
+	/** Process request, write response */
 	private void handleConnection(Reader in, PrintWriter out) {
 		try {
 			out.println(LavaLampServer.VERSION);
@@ -67,7 +71,7 @@ public class ConnectionHandler {
 					break;
 				}
 				
-				String cmd = line.toUpperCase();
+				String cmd = line.trim().toUpperCase();
 				if (cmd.startsWith(QUIT)) {
 					break;
 					
@@ -94,7 +98,7 @@ public class ConnectionHandler {
 					controller.setMute( mute );
 					out.println(MUTE+" "+mute);
 					
-				} else {
+				} else if (cmd.length() > 0) {
 					out.println("Unrecognised command: "+cmd);
 					out.println("Expecting one of: "+PING+","+QUIT+","+BUILDNAME+","+BUILDRESULT+","+MUTE);
 				}

@@ -14,8 +14,14 @@
       <f:entry title="${%Port}" field="port">
         <f:textbox />
       </f:entry>
+      <f:entry title="${%Protocol}" field="protocol">
+        <select class="setting-input validated" name="protocol">
+          <f:option selected="${instance.protocol=='UDP'}">UDP</f:option>
+          <f:option selected="${instance.protocol=='TCP'}">TCP</f:option>
+        </select>
+      </f:entry>
       <f:validateButton title="${%Test Connection}" 
                         progress="${%Testing...}"
                         method="testServerConnection" 
-                        with="address,port" />
+                        with="address,port,protocol" />
 </j:jelly>
