@@ -14,6 +14,12 @@
 
   <name>Hudson Lava Lamp Notifier plugin</name>
   <url>http://wiki.hudson-ci.org/display/HUDSON/Lava+Lamp+Notifier</url>
+  <developers>
+    <developer>
+      <id>edrandall</id>
+      <name>Ed Randall</name>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,10 +43,4 @@
 
   </dependencies>
 
-
-  <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/notifier</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/notifier</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/lavalamp/notifier</url>
-  </scm>
 </project>
