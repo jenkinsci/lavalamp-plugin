@@ -52,8 +52,6 @@ public class LavaLampNotifier extends Notifier
 
 	private static final Logger LOG = Logger.getLogger(LavaLampNotifier.class.getName());
 
-	/** The LavaLamp name when "default" is selected */
-	private static final String DEFAULTNAME = "(Default)";
 
 	/** The name of the LavaLamp in use */
 	private final String	name;
@@ -93,7 +91,7 @@ public class LavaLampNotifier extends Notifier
             }
         }
         
-        if (DEFAULTNAME.equals(name) && all.length > 0)
+        if (all.length > 0)
         	return all[0]; // use the default installation
 
         return null;
@@ -118,6 +116,10 @@ public class LavaLampNotifier extends Notifier
     public boolean perform(AbstractBuild<?,?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException
     {
     	LavaLampInstallation ll = getLavaLamp();
+    	if (ll == null) {
+    		LOG.log(Level.SEVERE, "No LavaLamp server selected for: "+build.getFullDisplayName());
+    		return true;
+    	}
     	
     	Result result = build.getResult();
     	Result prevResult = null;
