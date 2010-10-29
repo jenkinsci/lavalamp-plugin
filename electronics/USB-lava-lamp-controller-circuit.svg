@@ -346,6 +346,34 @@
          style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
          transform="matrix(0.2,0,0,0.2,1.48,0.2)" />
     </marker>
+    <marker
+       inkscape:stockid="DotS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker10198-1"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path10200-7"
+         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
+         transform="matrix(0.2,0,0,0.2,1.48,0.2)" />
+    </marker>
+    <marker
+       inkscape:stockid="DotS"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="marker3288"
+       style="overflow:visible">
+      <path
+         inkscape:connector-curvature="0"
+         id="path3290"
+         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt;marker-start:none;marker-end:none"
+         transform="matrix(0.2,0,0,0.2,1.48,0.2)" />
+    </marker>
   </defs>
   <sodipodi:namedview
      inkscape:document-units="mm"
@@ -364,8 +392,8 @@
      inkscape:snap-global="false"
      inkscape:window-width="1483"
      inkscape:window-height="969"
-     inkscape:window-x="73"
-     inkscape:window-y="15"
+     inkscape:window-x="23"
+     inkscape:window-y="27"
      inkscape:window-maximized="0">
     <inkscape:grid
        type="xygrid"
@@ -1913,5 +1941,53 @@
          x="460"
          y="46.594482"
          id="tspan10377">Ed Randall April 2010</tspan></text>
+    <g
+       transform="matrix(-1,0,0,1,212.20058,-189.39175)"
+       id="g3276"
+       style="display:inline"
+       inkscape:transform-center-x="18"
+       inkscape:transform-center-y="-36">
+      <path
+         style="fill:none;stroke:#000000;stroke-width:3.5439992;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 98.810987,293.55712 14.173223,0"
+         id="path3278"
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0" />
+      <path
+         style="fill:none;stroke:#000000;stroke-width:3.54330516;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         d="m 148.41729,293.55712 19.17322,2e-5"
+         id="path3280"
+         sodipodi:nodetypes="cc"
+         inkscape:connector-curvature="0" />
+      <rect
+         style="color:#000000;fill:none;stroke:#000000;stroke-width:3.54330707;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;stroke-dashoffset:0;marker:none;visibility:visible;display:inline;overflow:visible"
+         id="rect3282"
+         width="35.433048"
+         height="14.173222"
+         x="112.98426"
+         y="286.47049" />
+    </g>
+    <text
+       sodipodi:linespacing="125%"
+       id="text3284"
+       y="88.352852"
+       x="75.5"
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><tspan
+         y="88.352852"
+         x="75.5"
+         id="tspan3286"
+         sodipodi:role="line">10K</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:3.54330707;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#marker10198)"
+       d="m 110.5,104.12876 19,0 0,0"
+       id="path3288"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccc" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:3.54330707;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#marker10198)"
+       d="m 43.500002,104.12876 -15,0"
+       id="path4302"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
