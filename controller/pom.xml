@@ -3,15 +3,23 @@
 
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
-    <artifactId>lavalamp-pom</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <artifactId>lavalamp</artifactId>
+    <version>1.2</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
+  <groupId>org.jvnet.hudson.plugins.lavalamp</groupId>
   <artifactId>LavaLampController</artifactId>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.2</version>
 
   <name>Lava Lamp controller application</name>
+  <url>http://wiki.hudson-ci.org/display/HUDSON/Lava+Lamp+Notifier</url>
+  <developers>
+    <developer>
+      <id>edrandall</id>
+      <name>Ed Randall</name>
+    </developer>
+  </developers>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -70,5 +78,11 @@
 
     </plugins>
   </build>
+
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/lavalamp-1.2/controller</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/lavalamp-1.2/controller</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/tags/lavalamp-1.2/controller</url>
+  </scm>
 
 </project>
