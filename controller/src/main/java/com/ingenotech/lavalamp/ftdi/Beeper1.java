@@ -1,5 +1,9 @@
 package com.ingenotech.lavalamp.ftdi;
 
+import java.io.IOException;
+
+import com.ingenotech.lavalamp.Log;
+
 
 
 public class Beeper1 extends Thread implements Beeper {
@@ -29,27 +33,32 @@ public class Beeper1 extends Thread implements Beeper {
 		long runFor2 = (runFor >> 2);
 		long runFor1 = runFor - runFor2;
 
-		boolean beep = true;
-		do {
-			device.setBeep(beep);
-			beep = !beep;
-			delay -= delta;
-			if (delay <= minDelay)
-				delay = minDelay;
-			try {
-				Thread.sleep(delay);
-			} catch (InterruptedException ix) {
+		try {
+			boolean beep = true;
+			do {
+				device.setBeep(beep);
+				beep = !beep;
+				delay -= delta;
+				if (delay <= minDelay)
+					delay = minDelay;
+				try {
+					Thread.sleep(delay);
+				} catch (InterruptedException ix) {
+				}
+			} while (run && (System.currentTimeMillis()-start) < runFor1);
+
+			if (run) {
+				device.setBeep(true);
+				try {
+					Thread.sleep(runFor2);
+				} catch (InterruptedException ix) {
+				}
 			}
-		} while (run && (System.currentTimeMillis()-start) < runFor1);
-		
-		if (run) {
-			device.setBeep(true);
-			try {
-				Thread.sleep(runFor2);
-			} catch (InterruptedException ix) {
-			}
+
+			device.setBeep(false);
+			
+		} catch (IOException ex) {
+			Log.log("Beeper1: device error: "+ex.getMessage());
 		}
-		
-		device.setBeep(false);
 	}
 }

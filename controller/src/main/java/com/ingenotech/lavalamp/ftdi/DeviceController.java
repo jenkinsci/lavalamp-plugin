@@ -1,5 +1,7 @@
 package com.ingenotech.lavalamp.ftdi;
 
+import java.io.IOException;
+
 import com.ftdichip.ftd2xx.BitBangMode;
 import com.ftdichip.ftd2xx.Device;
 import com.ftdichip.ftd2xx.DeviceDescriptor;
@@ -10,52 +12,88 @@ import com.ingenotech.lavalamp.Log;
 
 public class DeviceController implements DeviceWriter {
 
-	private Device	device;
-	private int		currentData;
-	private RedLamp	redLamp;
-	private Beeper 	beeper;
-	private boolean	mute = false;
+	private Device		device;
+	private int			currentData;
+	private RedLamp		redLamp;
+	private Beeper 		beeper;
+	private boolean		mute = false;
 	
-	public DeviceController() throws FTD2xxException {
-
-		 Device[] devices = Service.listDevices();
-		 if (devices.length < 1)
-			 throw new IllegalStateException("FTDI device not found!");
-		 this.device = devices[0];
-		 
-		 DeviceDescriptor desc = device.getDeviceDescriptor();
-		 Log.log("Manufacturer: " +desc.getManufacturer());
-		 Log.log("Serial#: " +desc.getSerialNumber());
-		 Log.log("Product descr: " +desc.getProductDescription());
+	
+	public DeviceController() {
 	}
 
 	
-	public void open() throws FTD2xxException {
-		device.open();
-		device.setBitBangMode(0x0f, BitBangMode.ASYNCHRONOUS);
-		write(0x00);
+	private Device connect() throws IOException {
+		try {
+			Device[] devices = Service.listDevices();
+			if (devices.length < 1)
+				throw new IOException("FTDI device not found!");
+			Device ftdi = devices[0];
+			DeviceDescriptor desc = ftdi.getDeviceDescriptor();
+			Log.log("Manufacturer: " +desc.getManufacturer());
+			Log.log("Serial#: " +desc.getSerialNumber());
+			Log.log("Product descr: " +desc.getProductDescription());
+			return ftdi;
+			
+		} catch (FTD2xxException ftx) {
+			throw new IOException("Unable to connect to FTDI device", ftx);
+		}
 	}
 	
 	
-	public void close() throws FTD2xxException {
-		write(0x00);
-		device.close();
+	public synchronized void open() throws IOException {
+		try {
+			if (device == null) {
+				device = connect();
+			}
+			device.open();
+			device.setBitBangMode(0x0f, BitBangMode.ASYNCHRONOUS);
+			write(0x00);
+		} catch (FTD2xxException ftx) {
+			this.device = null;
+			throw new IOException("open(): FTDI device disconnected", ftx);
+		}
+	}
+	
+	
+	public synchronized void close() throws IOException {
+		try {
+			if (device != null) { 
+				write(0x00);
+				device.close();
+			}
+		} catch (IOException ftx) {
+			Log.log("close()", ftx);
+
+		} finally {
+			device = null;
+		}
 	}
 
 	
-	private void write(int data) throws FTD2xxException {
-		 data &= 0x0f;
-		 //Log.log("Set  D0..D3 = 0x"+Integer.toHexString(data));
-		 device.write(data);
-		 this.currentData = data;
+	private synchronized void write(int data) throws IOException {
+		 try {
+			 if (device == null)
+				 open();
+			 
+			 data &= 0x0f;
+			 //Log.log("Set  D0..D3 = 0x"+Integer.toHexString(data));
+			 device.write(data);
+			 this.currentData = data;
+			 
+		 } catch (FTD2xxException ftx) {
+			 // I/O error - USB device unplugged?
+			 device = null;
+			 throw new IOException("write("+Integer.toHexString(data)+"): FTDI device disconnected", ftx);
+		 }
 	}
 	
-	private void set(DeviceBits bit) throws FTD2xxException {
+	private void set(DeviceBits bit) throws IOException {
 		int data = DeviceBits.set(currentData, bit);
 		write(data);
 	}
 	
-	private void clear(DeviceBits bit) throws FTD2xxException {
+	private void clear(DeviceBits bit) throws IOException {
 		int data = DeviceBits.clear(currentData, bit);
 		write(data);
 	}
@@ -89,28 +127,20 @@ public class DeviceController implements DeviceWriter {
 	}
 	
 	
-	public synchronized void setLamp(boolean on) {
-		try {
-			if (on) {
-				set(DeviceBits.LAMP);
-			} else {
-				clear(DeviceBits.LAMP);
-			}
-		} catch (FTD2xxException fx) {
-			Log.log("setLamp("+on+")", fx);
+	public synchronized void setLamp(boolean on) throws IOException {
+		if (on) {
+			set(DeviceBits.LAMP);
+		} else {
+			clear(DeviceBits.LAMP);
 		}
 	}
 	
 	
-	public synchronized void setBeep(boolean on) {
-		try {
-			if (on && !mute) {
-				set(DeviceBits.BEEP);
-			} else {
-				clear(DeviceBits.BEEP);
-			}
-		} catch (FTD2xxException fx) {
-			Log.log("setBeep("+on+")", fx);
+	public synchronized void setBeep(boolean on) throws IOException {
+		if (on && !mute) {
+			set(DeviceBits.BEEP);
+		} else {
+			clear(DeviceBits.BEEP);
 		}
 	}
 	

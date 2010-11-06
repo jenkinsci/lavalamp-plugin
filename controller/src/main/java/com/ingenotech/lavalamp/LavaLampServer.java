@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 
-import com.ftdichip.ftd2xx.FTD2xxException;
 import com.ingenotech.annotations.Version;
 import com.ingenotech.lavalamp.ftdi.DeviceController;
 import com.ingenotech.tools.VersionReader;
@@ -27,16 +26,16 @@ public class LavaLampServer {
     	VERSION = "LavaLamp server"+(v == null ? "" : " V"+v)+(hostname == null ? "" : " @"+hostname);
     }
 
-    private DeviceController device;
+    private DeviceController controller;
     private TCPListener      tcpListener;
     private UDPListener      udpListener;
 
     public LavaLampServer(InetSocketAddress tcpAddress,
                           InetSocketAddress udpAddress,
-    		              InetAddress multicastAddress) throws FTD2xxException, IOException
+    		              InetAddress multicastAddress) throws IOException
     {
-        device = new DeviceController();
-        device.open();
+        controller = new DeviceController();
+        controller.open();
         if (tcpAddress != null && tcpAddress.getPort() > 0) {
         	try {
             	tcpListener = new TCPListener(this, tcpAddress);
@@ -59,35 +58,35 @@ public class LavaLampServer {
         Log.log("updateState("+bs+")");
         switch (bs.getStatus()) {
             case SUCCESS:
-                device.redLampAlert(false);
-                device.setBeep(false);
-                device.setLamp(false);
+                controller.redLampAlert(false);
+                controller.setBeep(false);
+                controller.setLamp(false);
                 break;
             case FAILURE:
-                device.redLampAlert(true);
-                device.beepAlert1();
+                controller.redLampAlert(true);
+                controller.beepAlert1();
                 break;
             case UNSTABLE:
-                device.redLampAlert(false);
-                device.setLamp(true);
-                device.beepAlert2();
+                controller.redLampAlert(false);
+                controller.setLamp(true);
+                controller.beepAlert2();
                 break;
             case NOT_BUILT:
-                device.redLampAlert(false);
-                device.setLamp(true);
-                device.beepAlert2();
+                controller.redLampAlert(false);
+                controller.setLamp(true);
+                controller.beepAlert2();
                 break;
             case ABORTED:
-                device.redLampAlert(false);
-                device.setLamp(true);
-                device.beepAlert2();
+                controller.redLampAlert(false);
+                controller.setLamp(true);
+                controller.beepAlert2();
                 break;
         }
     }
 
 
     public void setMute(boolean mute) {
-        device.setMute(mute);
+        controller.setMute(mute);
     }
 
 
@@ -98,8 +97,8 @@ public class LavaLampServer {
             udpListener.close();
 
         try {
-            device.close();
-        } catch ( FTD2xxException fx ) {
+            controller.close();
+        } catch ( IOException fx ) {
         }
     }
 

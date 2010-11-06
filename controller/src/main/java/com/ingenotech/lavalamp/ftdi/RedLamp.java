@@ -1,5 +1,9 @@
 package com.ingenotech.lavalamp.ftdi;
 
+import java.io.IOException;
+
+import com.ingenotech.lavalamp.Log;
+
 
 
 public class RedLamp extends Thread {
@@ -20,13 +24,19 @@ public class RedLamp extends Thread {
 	}
 	
 	public void run() {
-		while (run) {
-			device.setLamp(false);
-			device.setLamp(true);
-			try {
-				sleep(RED_DELAY);
-			} catch (InterruptedException ix) {
+		try {
+			while (run) {
+				device.setLamp(false);
+				device.setLamp(true);
+				try {
+					sleep(RED_DELAY);
+				} catch (InterruptedException ix) {
+				}
 			}
+
+		} catch (IOException ex) {
+			Log.log("RedLamp: device error: "+ex.getMessage());
 		}
+
 	}
 }
