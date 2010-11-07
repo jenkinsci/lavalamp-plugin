@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,11 +18,12 @@ public class UDPConnection implements Connection {
 	private static final Logger LOG = Logger.getLogger(UDPConnection.class.getName());
 
 	private InetAddress 		server;
+	private final boolean       multicast;
 	private int 				port;
 	private DatagramSocket	    socket;
 	private String				serverIdent;
 	
-	private static final int TIMEOUT = 20000;
+	protected static final int  SO_TIMEOUT = 20000;
 	
 	
 	public UDPConnection(String host, int port) throws UnknownHostException {
@@ -32,14 +34,27 @@ public class UDPConnection implements Connection {
 	public UDPConnection(InetAddress server, int port) {
 		this.server = server;
 		this.port = port;
-		this.serverIdent = "LavaLamp@"+server+":UDP:"+port;
+		if (this.server.isMulticastAddress()) {
+			multicast = true;
+			this.serverIdent = "LavaLamp@Multicast:"+server+":"+port;
+		} else {
+			multicast = false;
+			this.serverIdent = "LavaLamp@"+server+":UDP:"+port;
+		}
 	}
 	
+
 	public synchronized void open() throws IOException {
 		if (this.socket == null) {
-            socket = new DatagramSocket();
-            socket.setSoTimeout(TIMEOUT);
-            socket.connect(server, port);
+			DatagramSocket s;
+			if (multicast) {
+				s = new MulticastSocket(port);
+			} else { 
+				s = new DatagramSocket();
+				s.setSoTimeout(SO_TIMEOUT);
+				s.connect(server,port);
+			}
+            this.socket = s;
 		}
 	}
 	
@@ -60,6 +75,9 @@ public class UDPConnection implements Connection {
 		pw.println(PING+" "+new java.util.Date().toString());
 		pw.flush();
 		send(sw.toString());
+		if (multicast)
+			return true;
+		
 		String rec = receive();
 		int px = rec.indexOf(PING);
 		if (px > 0) {
@@ -85,7 +103,7 @@ public class UDPConnection implements Connection {
 	
 	private void send(String msg) throws IOException {
         byte[] buffer = msg.getBytes();
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, server, port);
         socket.send(packet);
 	}
 	

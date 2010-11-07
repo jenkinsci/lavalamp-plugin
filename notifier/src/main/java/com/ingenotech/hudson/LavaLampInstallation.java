@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
@@ -78,7 +77,7 @@ public class LavaLampInstallation extends Notifier
     	return address;
     }
     
-    private static InetAddress parseAddress(String value) throws UnknownHostException {
+    private static InetAddress parseAddress(String value) throws Exception {
     	InetAddress ia = InetAddress.getByName(value);
     	return ia;
     }
@@ -256,12 +255,25 @@ public class LavaLampInstallation extends Notifier
         		InetAddress s = parseAddress(address);
         		int p = parsePort(port);
         		String u = parseProtocol(protocol);
+        		
+        		if (s.isMulticastAddress()) {
+        			if (!PROTOCOL_UDP.equalsIgnoreCase(u)) {
+            			return FormValidation.error("Protocol must be UDP for Multicast server address");
+        			}
+        		}
+        		
         		c = newConnection(s, p, u);
         		c.open();
         		boolean ok = c.ping(); 
         		String ident = c.getServerIdent();
         		if (ok) {
-        			return FormValidation.ok("Connection to LavaLamp server:"+ident+" tested successfully.");
+        			String msg;
+        			if (s.isMulticastAddress()) {
+            			msg = "Connection to LavaLamp server:"+ident+" tested - check the LavaLampServer log output as no response is sent when using multicast.";
+        			} else {
+            			msg = "Connection to LavaLamp server:"+ident+" tested successfully.";
+        			}
+        			return FormValidation.ok(msg);
         		} else {
         			return FormValidation.error("Connected to LavaLamp server:"+ident+" but ping failed.");
         		}
