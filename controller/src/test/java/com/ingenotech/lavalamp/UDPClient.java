@@ -3,6 +3,7 @@ package com.ingenotech.lavalamp;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 
 
 /**
@@ -38,12 +39,11 @@ public class UDPClient {
         //sb.append("RESULT UNSTABLE"+NL);
         //sb.append("QUIT"+NL);
         byte[] buffer = sb.toString().getBytes();
-        DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+        DatagramPacket packet = new DatagramPacket(buffer, buffer.length, address, port);
         
         DatagramSocket socket = null;
         try {
-            socket = new DatagramSocket();
-            socket.connect(address, port);
+            socket = new MulticastSocket();
             socket.send(packet);
 
         } finally {

@@ -38,7 +38,6 @@ public class ConnectionHandler {
 
 	
 	public String handleConnection(DatagramPacket packet) {
-		Log.log("UDP connection from: "+packet.getAddress()+":"+packet.getPort());
 		String data = new String(packet.getData(), packet.getOffset(), packet.getLength());
 		Reader in = new StringReader( data );
 		StringWriter sw = new StringWriter();
@@ -49,7 +48,6 @@ public class ConnectionHandler {
 	}
 	
 	public void handleConnection(Socket socket) throws IOException {
-		Log.log("TCP connection from: "+socket);
 		Reader in = new InputStreamReader( socket.getInputStream() );
 		PrintWriter out = new PrintWriter( socket.getOutputStream(), true );
 		handleConnection( in, out );

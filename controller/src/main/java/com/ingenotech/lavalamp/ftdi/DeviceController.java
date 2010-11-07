@@ -62,8 +62,6 @@ public class DeviceController implements DeviceWriter {
 				write(0x00);
 				device.close();
 			}
-		} catch (IOException ftx) {
-			Log.log("close()", ftx);
 
 		} finally {
 			device = null;

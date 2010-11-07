@@ -12,4 +12,4 @@ if defined ProgramFiles(x86) (
 set JAVA32HOME=%PF%\Java\jre6
 set JAVA32=%JAVA32HOME%\bin\java
 
-%JAVA32% -Djava.library.path=%NLP% -cp %CP% com.ingenotech.lavalamp.LavaLampServer 0 1999
+%JAVA32% -Djava.library.path=%NLP% -cp %CP% com.ingenotech.lavalamp.LavaLampServer 0 1999 224.0.0.3
