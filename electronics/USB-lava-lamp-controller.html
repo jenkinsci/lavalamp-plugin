@@ -1,0 +1,49 @@
+<html>
+<head>
+  <title>USB Lava Lamp Controller</title>
+</head>
+<body>
+<h1>USB Lava Lamp Controller - Circuit Design</h1>
+
+<p>
+The lamp which I used was a "USB Glitter Lava Lamp" available at low cost from your favourite online auction site, local market or pound store. Unfortunately programmatic control of this type of lamp is not possible in the as-purchased state, when plugged in it is always on.
+</p>
+
+<p>
+Therefore I designed a simple circuit around an <a href="http://www.ftdichip.com/Products/Modules/DevelopmentModules.htm#MM232R">FTDI MM232R</a> module and some MOSFET drivers to accomplish this, also adding a piezo-beeper to alert developers when a build fails.
+</p>
+
+<p>
+The prototype was simply built on old-fashioned stripboard (0.1" pitch).
+</p>
+
+<p>
+<a href="images/USB-lava-lamp-controller-circuit.png" target="lavalampimg"><img src="images/small/USB-lava-lamp-controller-circuit.png" alt="circuit diagram"/></a>.
+<a href="images/USB-lava-lamp-controller-component-layout-top.png" target="lavalampimg"><img src="images/small/USB-lava-lamp-controller-component-layout-top.png" alt="stripboard top - component layout"/></a>
+<a href="images/USB-lava-lamp-controller-stripboard-layout-bottom.png" target="lavalampimg"><img src="images/small/USB-lava-lamp-controller-stripboard-layout-bottom.png" alt="stripboard bottom - breaks"/></a>
+</p>
+
+<p>
+The great thing is that FTDI provide free USB drivers for a number of OSes, higher-level code can then be written in Java, C, .NET or whatever.
+</p>
+
+<p>
+Since the hudson server is back in the server room, the lava lamp module is attached to USB on a desktop machine and a <a href="http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/lavalamp/controller">simple socket server</a> runs to listen for build results.
+</p>
+
+<p>
+The <a href="http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/lavalamp/notifier">notifier</a> plug-in talks to this server across the network. <i>(I could have used an existing RSS notifier, but didn't want the lamp to be polling Hudson constantly, I rather preferred the immediacy of the result being "pushed" to a known listener.)</i> It consists of a "global" module which allows configuration of any number of different LavaLamp host/port combinations (to support different jobs or projects).
+<img src="images/notifier-globalconfig.png"/>
+</p>
+
+<p>
+A "per-job" module then allows selection of the lamp you want to notify with the status of each job.
+<img src="images/notifier-jobconfig.png"/>
+</p>
+
+<p>
+Theoretically alternate "lamp server" modules could be developed which might not necessarily use a hardware lamp at all - listening on an IP-multicast address to pop up an icon in everybody's windows tray is one idea.
+</p>
+
+</body>
+</html>

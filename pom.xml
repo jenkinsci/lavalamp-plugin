@@ -26,8 +26,9 @@
   </properties>
 
   <modules>
-    <module>notifier</module>
+    <module>electronics</module>
     <module>controller</module>
+    <module>notifier</module>
   </modules>
 
   <scm>

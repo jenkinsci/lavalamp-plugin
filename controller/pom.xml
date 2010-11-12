@@ -56,7 +56,7 @@
             </manifest>
           </archive>
         </configuration>
-     </plugin>
+      </plugin>
 
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>

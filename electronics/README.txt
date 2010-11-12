@@ -7,7 +7,7 @@ http://www.ftdichip.com/Documents/AppNotes/AN232R-01_FT232RBitBangModes.pdf
 
 
 Program MM232R using FT_PROG.EXE
-Use ft-mm232r-lavalam.xml as the template
+Use ft-mm232r-lavalamp.xml as the template
 Important parameters to change are:
 
 1) Set "Load D2XX Driver"="true"
