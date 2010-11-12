@@ -6,12 +6,28 @@
 <h1>USB Lava Lamp Controller - Circuit Design</h1>
 
 <p>
-The lamp which I used was a "USB Glitter Lava Lamp" available at low cost from your favourite online auction site, local market or pound store. Unfortunately programmatic control of this type of lamp is not possible in the as-purchased state, when plugged in it is always on.
+The lamp which I used was a "USB Glitter Light" available at low cost from your favourite online auction site, local market or pound store.
+Unfortunately programmatic control of this type of lamp is not possible in the as-purchased state, when plugged in it is always on.
 </p>
+<a href="images/usb-glitter-light.jpg" target="lavalampimg"><img src="images/small/usb-glitter-light.jpg"></a>
 
 <p>
-Therefore I designed a simple circuit around an <a href="http://www.ftdichip.com/Products/Modules/DevelopmentModules.htm#MM232R">FTDI MM232R</a> module and some MOSFET drivers to accomplish this, also adding a piezo-beeper to alert developers when a build fails.
+Therefore I designed a simple circuit around an
+<a href="http://www.ftdichip.com/Products/Modules/DevelopmentModules.htm#MM232R">FTDI MM232R</a> module and some
+MOSFET drivers to accomplish this, also adding a piezo-beeper to alert developers when a build fails.
+The MM232R can be obtained either direct from <a href="http://apple.clickandbuild.com/cnb/shop/ftdichip">the FTDI shop</a> or from <a href="http://uk.farnell.com/ftdi/mm232r/development-kit-usb-uart-module/dp/1146037?Ntt=MM232R">Farnell</a>.
 </p>
+
+<p>FTDI data sheets are available from <a href="http://www.ftdichip.com/FTSupport.htm">http://www.ftdichip.com</a>.
+I recommend reading the following:
+<ul>
+<li><a href="http://www.ftdichip.com/Support/Documents/DataSheets/Modules/DS_MM232R.pdf">MM232R Datasheet</a></li>
+<li><a href="http://www.ftdichip.com/Support/Documents/DataSheets/ICs/DS_FT232R.pdf">FT232R Datasheet</a></li>
+<li><a href="http://www.ftdichip.com/Support/Documents/ProgramGuides/D2XX_Programmer%27s_Guide(FT_000071).pdf">D2XX Programmer's Guide<a/></li>
+<li><a href="http://www.ftdichip.com/Documents/AppNotes/AN232R-01_FT232RBitBangModes.pdf">AN232R-01 FT232R Bit Bang Modes</a></li>
+<li><a href="http://www.ftdichip.com/Documents/AppNotes/AN232R-04-CDM.pdf">AN232R-04 Windows Combined Driver Model</a></li>
+<li><a href="http://www.ftdichip.com/Documents/AppNotes/AN_124_User_Guide_For_FT_PROG.pdf">AN124 User Guide for FTDI FT_PROG Utility</a></li>
+</ul>
 
 <p>
 The prototype was simply built on old-fashioned stripboard (0.1" pitch).
@@ -24,13 +40,70 @@ The prototype was simply built on old-fashioned stripboard (0.1" pitch).
 </p>
 
 <p>
-The great thing is that FTDI provide free USB drivers for a number of OSes, higher-level code can then be written in Java, C, .NET or whatever.
+I used a self-drive piezo-electric beeper to provide an audible alert - available from <a href="www.maplin.co.uk">Maplin<a/> part number KU58N.
+The MOSFETs and other components were obtained from Maplin and various eBay sellers.
+It would have been nice to fit the board inside the base of the lamp, but my prototype was too large, so the completed board was fitted
+in to a small plastic box with a DC power socket for the lamp.  I cut the USB plug off the the lamp cable and replaced it with a
+matching DC power plug.  An LED in parallel with the socket provides an additional on/off indication.
 </p>
 
 <p>
-Since the hudson server is back in the server room, the lava lamp module is attached to USB on a desktop machine and a <a href="http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/lavalamp/controller">simple socket server</a> runs to listen for build results.
+<a href="images/board-top.jpg" target="lavalampimg"><img src="images/small/board-top.jpg" alt="prototype board - top"/></a>.
+<a href="images/board-bottom.jpg" target="lavalampimg"><img src="images/small/board-bottom.jpg" alt="prototype board - bottom"/></a>.
+<a href="images/board-top-with-MM232R.jpg" target="lavalampimg"><img src="images/small/board-top-with-MM232R.jpg" alt="prototype board with MM232R"/></a>.
+<a href="images/boxed-complete.jpg" target="lavalampimg"><img src="images/small/boxed-complete.jpg" alt="completed controller and lamp"></a>
 </p>
 
+<p>
+All of the documentation is contained within the Hudson plugin as LavaLampElectronics.zip.
+You will need to use <tt>jar</tt> or <tt>unzip</tt> to extract it.
+</p>
+
+<hr/>
+<h2>Lamp Control Software</h2>
+<p>
+Since the hudson server is back in the server room, the lava lamp module is attached to USB on a desktop machine
+and a <a href="http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/lavalamp/controller">simple socket server</a>
+runs to listen for build results.
+</p>
+
+<p>
+FTDI provide free USB drivers for a number of operating systems.
+Higher level code still has to interface with the driver - a SourceForge project,
+<a href="http://sourceforge.net/projects/ftd2xxj/">FTD2XXj</a>, has already done this, so writing
+a Java program to control it becomes very straightforward.
+</p>
+
+<p>
+Before you can run the software using the design above, you need to set the EEPROM configuration in the FT232R chip.
+This is done using the <a href="">FT_PROG</a> utility (download from FTDI).
+We need to set two lines (lamp and piezo-buzzer) as bit-bang outputs, and tell it to request the D2XX driver when initialised.
+Therefore connect your MM232R to a USB cable and run FT_PROG.
+(If you want to do this even before you have built your circuit, use a jumper connect pins 2&nbsp;to&nbsp;3 together
+and pins 14&nbsp;to&nbsp;15 together.  Then the device will power up correctly and be recognised by Windows).
+<br/>
+Make the following configuration changes (the template file <tt>ft-mm232r-lavalamp.xml</tt> contains these) :
+<ol>
+<li>Set "Load D2XX Driver"="true"</li>
+<li>Set "Invert RS232 Signals"="true" for: RxD, TxD, CTS, RTS
+<br/>This inverts the signal state so that the buzzer does not sound continuously from when you plug the unit in until LavaLampController is started.  (A small design mistake on my part perhaps).
+</li>
+<li>Set I/O Controls = I/O mode for: C0, C1, C2</li>
+<li>Leave I/O Controls for C3 = PWRON#</li>
+<li>Whatever you do, <b>DO NOT</b> set "ExternalOscillator"="true"<br/>
+- doing so without an external oscillator source will render the device unusable!</li>
+</ol>
+
+
+
+<p>
+The lamp control software is zipped up inside the released Hudson plugin as LavaLampController.zip.
+Extract it from LavaLampNotifier.hpi, then unpack it to a directory on your Windows or Linux machine.
+An example Windows batch file <tt>lavalamp.cmd</tt> is provided which should get you up and running.
+</p>
+
+<hr/>
+<h2>Hudson Notifier Software</h2>
 <p>
 The <a href="http://fisheye.hudson-ci.org/browse/Hudson/trunk/hudson/plugins/lavalamp/notifier">notifier</a> plug-in talks to this server across the network. <i>(I could have used an existing RSS notifier, but didn't want the lamp to be polling Hudson constantly, I rather preferred the immediacy of the result being "pushed" to a known listener.)</i> It consists of a "global" module which allows configuration of any number of different LavaLamp host/port combinations (to support different jobs or projects).
 <img src="images/notifier-globalconfig.png"/>
@@ -41,9 +114,12 @@ A "per-job" module then allows selection of the lamp you want to notify with the
 <img src="images/notifier-jobconfig.png"/>
 </p>
 
+<hr/>
 <p>
 Theoretically alternate "lamp server" modules could be developed which might not necessarily use a hardware lamp at all - listening on an IP-multicast address to pop up an icon in everybody's windows tray is one idea.
 </p>
 
+<hr/>
+<address>Ed Randall, November 2010</address>
 </body>
 </html>
