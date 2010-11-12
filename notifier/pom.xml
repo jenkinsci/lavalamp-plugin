@@ -53,14 +53,14 @@
           <showDeprecation>true</showDeprecation>
           <webResources>
             <resource>
-              <directory>controller/target</directory>
+              <directory>${project.parent.basedir}/controller/target</directory>
               <includes>
                 <include>*.zip</include>
               </includes>
               <filtering>false</filtering>
             </resource>
             <resource>
-              <directory>electronics/target</directory>
+              <directory>${project.parent.basedir}/electronics/target</directory>
               <includes>
                 <include>*.zip</include>
               </includes>
