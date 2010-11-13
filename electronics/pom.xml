@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>lavalamp</artifactId>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.jvnet.hudson.plugins.lavalamp</groupId>
   <artifactId>LavaLampElectronics</artifactId>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
   <packaging>pom</packaging>
 
   <name>Lava Lamp electronics documentation</name>
@@ -44,9 +44,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/electronics</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/electronics</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/lavalamp/electronics</url>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/lavalamp-1.3/electronics</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/lavalamp-1.3/electronics</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/tags/lavalamp-1.3/electronics</url>
   </scm>
 
 </project>
