@@ -4,13 +4,13 @@
   <parent>
     <groupId>org.jvnet.hudson.plugins</groupId>
     <artifactId>lavalamp</artifactId>
-    <version>1.4</version>
+    <version>1.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <groupId>org.jvnet.hudson.plugins.lavalamp</groupId>
   <artifactId>LavaLampNotifier</artifactId>
-  <version>1.4</version>
+  <version>1.5-SNAPSHOT</version>
   <packaging>hpi</packaging>
 
   <name>Hudson Lava Lamp Notifier plugin</name>
@@ -95,9 +95,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/lavalamp-1.4/notifier</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/lavalamp-1.4/notifier</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/lavalamp-1.4/notifier</url>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/notifier</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/notifier</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/lavalamp/notifier</url>
   </scm>
 
 </project>
