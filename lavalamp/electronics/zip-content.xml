@@ -1,0 +1,22 @@
+<assembly>
+  <id>${project.version}</id>
+  <formats>
+      <format>zip</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory></directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>README.txt</include>
+        <include>*.svg</include>
+        <include>*.html</include>
+        <include>images/**</include>
+        <include>ft-mm232r-lavalamp.xml</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>
+
+
+
