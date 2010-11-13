@@ -43,4 +43,10 @@
     </plugins>
   </build>
 
+  <scm>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/electronics</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/electronics</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/lavalamp/electronics</url>
+  </scm>
+
 </project>

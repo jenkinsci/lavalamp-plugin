@@ -95,9 +95,9 @@
   </build>
 
   <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/lavalamp-1.3/notifier</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/lavalamp-1.3/notifier</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/lavalamp-1.3/notifier</url>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/notifier</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp/notifier</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/lavalamp/notifier</url>
   </scm>
 
 </project>
