@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>lavalamp</artifactId>
-  <version>1.3</version>
+  <version>1.4-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Lava Lamp Master Project</name>
@@ -32,9 +32,9 @@
   </modules>
 
   <scm>
-    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/tags/lavalamp-1.3</connection>
-    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/tags/lavalamp-1.3</developerConnection>
-    <url>https://hudson.dev.java.net/source/browse/hudson/tags/lavalamp-1.3</url>
+    <connection>scm:svn:https://guest@svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp</connection>
+    <developerConnection>scm:svn:https://svn.dev.java.net/svn/hudson/trunk/hudson/plugins/lavalamp</developerConnection>
+    <url>https://hudson.dev.java.net/source/browse/hudson/trunk/hudson/plugins/lavalamp</url>
   </scm>
 
 </project>
