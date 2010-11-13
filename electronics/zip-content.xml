@@ -1,5 +1,5 @@
 <assembly>
-  <id></id>
+  <id>electronics</id>
   <formats>
       <format>zip</format>
   </formats>
@@ -8,6 +8,7 @@
       <directory></directory>
       <outputDirectory></outputDirectory>
       <includes>
+        <include>README.txt</include>
         <include>*.svg</include>
         <include>*.html</include>
         <include>images/**</include>
